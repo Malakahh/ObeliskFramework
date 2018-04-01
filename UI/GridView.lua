@@ -5,8 +5,8 @@
 
 local _, ns = ...
 local libraryName = "ObeliskGridView"
-local major = 0
-local minor = 1
+local major = 1
+local minor = 0
 
 ---------------
 -- Libraries --
@@ -40,7 +40,7 @@ setmetatable(GridView, {
 ---------------
 
 function GridView:New(width, height, name, parent)
-	local instance = FrameworkClass(self, "Frame", name, parent)
+	local instance = FrameworkClass(self, "FRAME", name, parent)
 
 	instance:SetSize(width, height)
 	instance.items = {}
@@ -59,45 +59,73 @@ end
 
 -- Sets the number of columns. 0 means auto
 function GridView:SetNumColumns(num)
+	assert(num >= 0)
 	self.numColumns = num
+end
+
+function GridView:GetNumColumns()
+	return self.numColumns
 end
 
 -- Sets the number of Rows. 0 means auto
 function GridView:SetNumRows(num)
+	assert(num >= 0)
 	self.numRows = num
 end
 
-function GridView:AddItem(vector, item)
-	item:SetParent(self)
-	item.gridPosition = vector
-	self.items[item.gridPosition:ToString()] = item
-	self:Update()
+function GridView:GetNumRows()
+	return self.numRows
 end
 
-function GridView:RemoveItem(vector)
-	self.items[vector] = nil
-	self:Update()
+function GridView:SetCellWidth(width)
+	self.cellWidth = width
+end
+
+function GridView:SetCellHeight(height)
+	self.cellHeight = height
+end
+
+function GridView:SetCellSize(width, height)
+	self:SetCellWidth(width)
+	self:SetCellHeight(height)
+end
+
+function GridView:AddItem(item)
+	item:SetParent(self)
+	table.insert(self.items, item)
+end
+
+function GridView:RemoveItem(item)
+	table.remove(item)
+end
+
+function GridView:ItemCount()
+	return #self.items
 end
 
 function GridView:Update()
 	local maxNumColumns, maxNumRows = self.numColumns, self.numRows
-	ns.Debug:print(libraryName, tostring(self.numRows) .. " - " .. tostring(self.numColumns))
-	for _,v in pairs(self.items) do
-		if self.numColumns == 0 then --Should automatically generate columns
-			maxNumColumns = math.max(maxNumColumns, v.gridPosition.x)
-		end
 
-		if self.numRows == 0 then -- Should automatically generate rows
-			maxNumRows = math.max(maxNumRows, v.gridPosition.y)
-		end
+	if maxNumColumns == 0 then --Should automatically generate columns
+		maxNumColumns = math.floor(self:GetWidth() / self.cellWidth)
 	end
 
+	if maxNumRows == 0 then -- Should automatically generate rows
+		maxNumRows = math.floor(self:GetHeight() / self.cellHeight)
+	end
 
-	local cellWidth = self:GetWidth() / maxNumColumns
-	local cellHeight = self:GetHeight() / maxNumRows
+	local i = 1
+	for y = 0, maxNumRows - 1 do
+		for x = 0, maxNumColumns - 1 do
+			local item = self.items[i]
+			item:ClearAllPoints()
+			item:SetPoint("TOPLEFT", self, "TOPLEFT", x * self.cellWidth, -y * self.cellHeight)
+			i = i + 1
 
-	for _,v in pairs(self.items) do
-		v:SetPoint("TOPLEFT", self, "TOPLEFT", v.gridPosition.x * cellWidth, v.gridPosition.y * cellHeight)
+			if i > #self.items then
+				return
+			end
+		end
 	end
 end
 

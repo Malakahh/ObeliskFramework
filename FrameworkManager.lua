@@ -39,7 +39,6 @@ if not Manager or Manager.version < managerVersion then
 	end
 
 	function Manager:GetLibrary(library, major)
-		print(library .. " v" .. major)
 		if not self.libs[library] or not self.libs[library][major] then
 			error("Cannot find a library instance of " .. library .. " version: " .. major)
 		end
