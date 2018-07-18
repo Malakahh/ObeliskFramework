@@ -46,15 +46,8 @@ function GridView:New(width, height, name, parent)
 	instance.items = {}
 	instance:SetNumColumns(0)
 	instance:SetNumRows(0)
-	instance:SetTexture()
 
 	return instance
-end
-
-function GridView:SetTexture()
-	self.tex = self:CreateTexture(nil, "BACKGROUND")
-	self.tex:SetAllPoints()
-	self.tex:SetColorTexture(0, 1, 0, 0.5)
 end
 
 -- Sets the number of columns. 0 means auto
