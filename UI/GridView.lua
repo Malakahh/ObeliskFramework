@@ -101,10 +101,18 @@ function GridView:Update()
 
 	if maxNumColumns == 0 then --Should automatically generate columns
 		maxNumColumns = math.floor(self:GetWidth() / self.cellWidth)
+
+		if maxNumColumns == 0 then --If it's still 0, define it as 1
+			maxNumColumns = 1
+		end
 	end
 
 	if maxNumRows == 0 then -- Should automatically generate rows
 		maxNumRows = math.floor(self:GetHeight() / self.cellHeight)
+
+		if maxNumRows == 0 then --If it's still 0, define it as 1
+			maxNumRows = 1
+		end
 	end
 
 	local i = 1
@@ -121,7 +129,3 @@ function GridView:Update()
 		end
 	end
 end
-
-
-
-
