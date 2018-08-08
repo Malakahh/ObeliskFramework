@@ -11,9 +11,7 @@ local major, minor = 0, 1
 ---------------
 
 local Options = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
-if not Options then 
-	error(ns.Debug:sprint(libraryName, "Failed to create library"))
-end
+if not Options then return end
 
 local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 0)
 if not FrameworkClass then

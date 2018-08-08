@@ -13,9 +13,7 @@ local minor = 0
 ---------------
 
 local GridView = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
-if not GridView then 
-	error(ns.Debug:sprint(libraryName, "Failed to create library"))
-end
+if not GridView then return end
 
 local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 0)
 if not FrameworkClass then

@@ -11,6 +11,7 @@ local major, minor = 0, 1
 ---------------
 
 local FrameworkClass = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
+if not FrameworkClass then return end
 
 if ns.OBELISK_DEBUG then
 	ns.Debug:print(libraryName, "LOADED")

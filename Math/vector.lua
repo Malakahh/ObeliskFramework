@@ -13,9 +13,7 @@ local minor = 1
 
 local Vector = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
 
-if not Vector then
-	error(ns.Debug:sprint(libraryName, "Failed to load ObeliskFrameworkManager"))
-end
+if not Vector then return end
 
 Vector.__index = Vector
 Vector.libraryName = libraryName
