@@ -10,5 +10,6 @@
 <Include file="UI\ObeliskUIInclude.xml"/>
 <Include file="Math\ObeliskMathInclude.xml"/>
 <Include file="System\ObeliskSystemInclude.xml"/>
+<Include file="Collections\ObeliskCollectionsInclude.xml"/>
 
 </Ui>
