@@ -6,7 +6,7 @@
 local _, ns = ...
 local libraryName = "ObeliskGridView"
 local major = 1
-local minor = 0
+local minor = 1
 
 ---------------
 -- Libraries --
@@ -44,6 +44,7 @@ function GridView:New(width, height, name, parent)
 	instance.items = {}
 	instance:SetNumColumns(0)
 	instance:SetNumRows(0)
+	instance:SetCellMargin() -- 0, 0
 
 	return instance
 end
@@ -94,6 +95,11 @@ function GridView:ItemCount()
 	return #self.items
 end
 
+function GridView:SetCellMargin(horizontal, vertical)
+	self.HorizontalCellMargin = horizontal or 0
+	self.VerticalCellMargin = vertical or 0
+end
+
 function GridView:Update()
 	local maxNumColumns, maxNumRows = self.numColumns, self.numRows
 
@@ -113,12 +119,21 @@ function GridView:Update()
 		end
 	end
 
+	if #self.items == 0 then
+		return
+	end
+
 	local i = 1
 	for y = 0, maxNumRows - 1 do
 		for x = 0, maxNumColumns - 1 do
 			local item = self.items[i]
 			item:ClearAllPoints()
-			item:SetPoint("TOPLEFT", self, "TOPLEFT", x * self.cellWidth, -y * self.cellHeight)
+			item:SetPoint("TOPLEFT", self, "TOPLEFT", x * self.cellWidth + x * self.HorizontalCellMargin, -y * self.cellHeight - y * self.VerticalCellMargin)
+
+			if self.debug then
+				self:ItemDebug(item)
+			end
+
 			i = i + 1
 
 			if i > #self.items then
@@ -126,4 +141,51 @@ function GridView:Update()
 			end
 		end
 	end
+end
+
+function GridView:ItemDebug(item)
+	if self.debug == nil then
+		return
+	end
+
+	if self.debug then
+
+		if item.ObeliskFramework_GridView_ItemDebugTexture == nil then
+			local tex = item:CreateTexture(nil, "HIGHLIGHT")
+			--tex:SetSize(item:GetWidth(), item:GetHeight())
+			tex:SetColorTexture(0, 1, 0, 0.5)
+			tex:SetAllPoints(item)
+			item.ObeliskFramework_GridView_ItemDebugTexture = tex
+		end
+
+		item.ObeliskFramework_GridView_ItemDebugTexture:Show()
+
+		if item.ObeliskFramework_GridView_ItemDebugString == nil then
+			local str = item:CreateFontString(nil, "ARTWORK", "GameFontNormalTiny2")
+			str:SetPoint("TOPLEFT", item, "TOPLEFT")
+
+			item.ObeliskFramework_GridView_ItemDebugString = str
+		end
+
+		item.ObeliskFramework_GridView_ItemDebugString:SetText(item:GetDebugText())
+		item.ObeliskFramework_GridView_ItemDebugString:Show()
+
+		-- instance.Title = instance:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+		-- instance.Title:SetPoint("TOPLEFT", instance.padding, -instance.padding)
+		-- instance.Title:SetText("Title")
+
+
+	else
+		item.ObeliskFramework_GridView_ItemDebugTexture:Hide()
+		item.ObeliskFramework_GridView_ItemDebugString:Hide()
+	end
+end
+
+function GridView:ToggleDebug()
+	if self.debug == nil then
+		self.debug = false
+	end
+
+	self.debug = not self.debug
+	self:Update()
 end
