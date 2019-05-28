@@ -6,7 +6,7 @@
 local _, ns = ...
 local libraryName = "ObeliskGridView"
 local major = 1
-local minor = 1
+local minor = 2
 
 ---------------
 -- Libraries --
@@ -88,7 +88,7 @@ function GridView:AddItem(item)
 end
 
 function GridView:RemoveItem(item)
-	table.remove(item)
+	ns.Util.Table.RemoveByVal(self.items, item)
 end
 
 function GridView:ItemCount()
@@ -100,11 +100,70 @@ function GridView:SetCellMargin(horizontal, vertical)
 	self.VerticalCellMargin = vertical or 0
 end
 
+function GridView:GetCalculatedGridSize()
+	local calculatedWidth = nil
+	local calculatedHeight = nil
+
+	if self.cellWidth ~= nil then
+		local numColumns = self.numColumns
+
+		if (numColumns == nil or numColumns == 0) and (self.numRows ~= nil or self.numRows ~= 0) then
+			numColumns = math.ceil(self:ItemCount() / self.numRows)
+		end
+
+		if numColumns == nil or numColumns == 0 then
+			numColumns = 1
+		end
+
+		if numColumns ~= nil then
+			calculatedWidth = numColumns * self.cellWidth
+
+			if self.HorizontalCellMargin ~= nil and self.HorizontalCellMargin ~= 0 then
+				calculatedWidth = calculatedWidth + numColumns * self.HorizontalCellMargin
+			end
+		end
+	end
+
+	if self.cellHeight ~= nil then
+		local numRows = self.numRows
+
+		if (numRows == nil or numRows == 0) and (self.numColumns ~= nil or self.numColumns ~= 0) then
+			numRows = math.ceil(self:ItemCount() / self.numColumns)
+		end
+
+		if numRows == nil or numRows == 0 then
+			numRows = 1
+		end
+
+		if numRows ~= nil then
+			calculatedHeight = numRows * self.cellHeight
+
+			if self.VerticalCellMargin ~= nil and self.VerticalCellMargin ~= 0 then
+				calculatedHeight = calculatedHeight + numRows * self.VerticalCellMargin
+			end
+		end
+	end
+
+	if calculatedWidth == 0 then
+		calculatedWidth = nil
+	end
+
+	if calculatedHeight == 0 then
+		calculatedHeight = nil
+	end
+
+	return calculatedWidth, calculatedHeight
+end
+
+function GridView:Sort(compFunc)
+	table.sort(self.items, compFunc)
+end
+
 function GridView:Update()
 	local maxNumColumns, maxNumRows = self.numColumns, self.numRows
 
 	if maxNumColumns == 0 then --Should automatically generate columns
-		maxNumColumns = math.floor(self:GetWidth() / self.cellWidth)
+		maxNumColumns = math.ceil(self:GetWidth() / (self.cellWidth + self.HorizontalCellMargin))
 
 		if maxNumColumns == 0 then --If it's still 0, define it as 1
 			maxNumColumns = 1
@@ -112,7 +171,7 @@ function GridView:Update()
 	end
 
 	if maxNumRows == 0 then -- Should automatically generate rows
-		maxNumRows = math.floor(self:GetHeight() / self.cellHeight)
+		maxNumRows = math.ceil(self:GetHeight() / (self.cellHeight + self.VerticalCellMargin))
 
 		if maxNumRows == 0 then --If it's still 0, define it as 1
 			maxNumRows = 1

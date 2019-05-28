@@ -4,7 +4,7 @@
 
 local _, ns = ...
 local libraryName = "ObeliskFrameworkClass"
-local major, minor = 0, 1
+local major, minor = 0, 2
 
 ---------------
 -- Libraries --
@@ -46,7 +46,7 @@ function FrameworkClass:New(prototype, frameType, frameName, parent, inheritsFra
 	end
 
 	if prototype ~= nil then
-		ns.Util.CopyTable(prototype, instance)
+		ns.Util.Table.Copy(prototype, instance)
 	end
 
 	return instance

@@ -1,6 +1,7 @@
 local _, ns = ...
 
 ns.Util = ns.Util or {}
+ns.Util.Table = ns.Util.Table or {}
 
 function ns.Util.AppendScript(frame, handler, func)
 	local old = frame:GetScript(handler)
@@ -30,24 +31,6 @@ function ns.Util.MergeFunc(f1, f2)
 		f1(...)
 		f2(...)
 	end
-end
-
-function ns.Util.CopyTable(source, dest)
-	if not source then return end
-
-	dest = dest or {}
-
-    for k,v in pairs(source) do
-    	if dest[k] == nil then
-    		if type(v) == "table" then
-    			dest[k] = ns.Util.CopyTable(v)
-    		else
-    			dest[k] = v
-    		end
-    	end
-    end
-
-    return dest
 end
 
 function ns.Util.Dump(value, depth)
@@ -84,4 +67,36 @@ function ns.Util.Dump(value, depth)
 	else
 		return str
 	end
+end
+
+-------------
+--- Table ---
+-------------
+
+function ns.Util.Table.Copy(source, dest)
+	if not source then return end
+
+	dest = dest or {}
+
+    for k,v in pairs(source) do
+    	if dest[k] == nil then
+    		if type(v) == "table" then
+    			dest[k] = ns.Util.Table.Copy(v)
+    		else
+    			dest[k] = v
+    		end
+    	end
+    end
+
+    return dest
+end
+
+function ns.Util.Table.RemoveByVal(tab, val)
+	for k,v in pairs(tab) do
+		if v == val then
+			table.remove(tab, k);
+			return true;
+		end
+	end
+	return false;
 end
