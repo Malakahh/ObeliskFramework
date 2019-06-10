@@ -209,18 +209,18 @@ function GridView:ItemDebug(item)
 
 	if self.debug then
 
-		if item.ObeliskFramework_GridView_ItemDebugTexture == nil then
-			local tex = item:CreateTexture(nil, "HIGHLIGHT")
-			--tex:SetSize(item:GetWidth(), item:GetHeight())
-			tex:SetColorTexture(0, 1, 0, 0.5)
-			tex:SetAllPoints(item)
-			item.ObeliskFramework_GridView_ItemDebugTexture = tex
-		end
+		-- if item.ObeliskFramework_GridView_ItemDebugTexture == nil then
+		-- 	local tex = item:CreateTexture(nil, "HIGHLIGHT")
+		-- 	--tex:SetSize(item:GetWidth(), item:GetHeight())
+		-- 	tex:SetColorTexture(0, 1, 0, 0.5)
+		-- 	tex:SetAllPoints(item)
+		-- 	item.ObeliskFramework_GridView_ItemDebugTexture = tex
+		-- end
 
-		item.ObeliskFramework_GridView_ItemDebugTexture:Show()
+		-- item.ObeliskFramework_GridView_ItemDebugTexture:Show()
 
 		if item.ObeliskFramework_GridView_ItemDebugString == nil then
-			local str = item:CreateFontString(nil, "ARTWORK", "GameFontNormalTiny2")
+			local str = item:CreateFontString(nil, "OVERLAY", "GameFontNormalTiny2")
 			str:SetPoint("TOPLEFT", item, "TOPLEFT")
 
 			item.ObeliskFramework_GridView_ItemDebugString = str
@@ -235,7 +235,7 @@ function GridView:ItemDebug(item)
 
 
 	else
-		item.ObeliskFramework_GridView_ItemDebugTexture:Hide()
+		-- item.ObeliskFramework_GridView_ItemDebugTexture:Hide()
 		item.ObeliskFramework_GridView_ItemDebugString:Hide()
 	end
 end

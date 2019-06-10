@@ -91,12 +91,22 @@ function ns.Util.Table.Copy(source, dest)
     return dest
 end
 
-function ns.Util.Table.RemoveByVal(tab, val)
-	for k,v in pairs(tab) do
+function ns.Util.Table.IndexOf(t, val)
+	for k,v in pairs(t) do
 		if v == val then
-			table.remove(tab, k);
-			return true;
+			return k
 		end
 	end
+
+	return nil
+end
+
+function ns.Util.Table.RemoveByVal(t, val)
+	local i = ns.Util.Table.IndexOf(t, val)
+	if i ~= nil then
+		table.remove(t, i)
+		return true
+	end
+
 	return false;
 end
