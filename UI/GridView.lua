@@ -88,7 +88,7 @@ function GridView:AddItem(item)
 end
 
 function GridView:RemoveItem(item)
-	ns.Util.Table.RemoveByVal(self.items, item)
+	local res = ns.Util.Table.RemoveByVal(self.items, item)
 end
 
 function GridView:ItemCount()

@@ -41,9 +41,11 @@ end
 -- - Compare(arr, val1, val2), compares the two values. val1 and val2 are indexes in the array. If arr[val1] < arr[val2] it returns -1. If arr[val1] > arr[val2] it returns 1. if arr[val1] == arr[val2] it returns 0.
 -- - Swap(arr, val1, val2), val1 and val2 are indexes in the array. Swaps arr[val1] and arr[val2]
 function CycleSort.Sort(array, funcTable)
-	local status = coroutine.status(CycleSort.coroutine)
-	if status ~= "dead" then
-		error(ns.Debug:sprint(libraryName, "Attempted to start one sort, while another has yet to completed. Status of other: " .. status))
+	if CycleSort.coroutine ~= nil then
+		local status = coroutine.status(CycleSort.coroutine)
+		if status ~= "dead" then
+			error(ns.Debug:sprint(libraryName, "Attempted to start one sort, while another has yet to completed. Status of other: " .. status))
+		end
 	end
 
 	CycleSort.coroutine = coroutine.create(CycleSort.Process)

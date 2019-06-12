@@ -91,14 +91,21 @@ function ns.Util.Table.Copy(source, dest)
     return dest
 end
 
-function ns.Util.Table.IndexOf(t, val)
+function ns.Util.Table.IndexWhere(t, funcCondition, ...)
 	for k,v in pairs(t) do
-		if v == val then
+		if funcCondition(k, v, ...) then
 			return k
 		end
 	end
 
 	return nil
+end
+
+local function FuncIndexOf(k, v, val)
+	return v == val
+end
+function ns.Util.Table.IndexOf(t, val)
+	return ns.Util.Table.IndexWhere(t, FuncIndexOf, val)
 end
 
 function ns.Util.Table.RemoveByVal(t, val)
@@ -109,4 +116,13 @@ function ns.Util.Table.RemoveByVal(t, val)
 	end
 
 	return false;
+end
+
+function ns.Util.Table.Arrange(t)
+	local ret = {}
+	for _,v in pairs(t) do
+		table.insert(ret, v)
+	end
+
+	return ret
 end
