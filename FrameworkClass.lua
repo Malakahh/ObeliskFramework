@@ -25,6 +25,14 @@ setmetatable(FrameworkClass, {
 })
 
 ---------------
+-- Constants --
+---------------
+
+local propertyPrefix = "__"
+local propertyGetterPrefix = propertyPrefix .. "get"
+local propertySetterPrefix = propertyPrefix .. "set"
+
+---------------
 -- Functions --
 ---------------
 
@@ -47,6 +55,39 @@ function FrameworkClass:New(prototype, frameType, frameName, parent, inheritsFra
 
 	if prototype ~= nil then
 		ns.Util.Table.Copy(prototype, instance)
+
+		setmetatable(instance, {
+			__call = function (self, ...)
+				return self:New(...)
+			end,
+			__index = function(self, key)
+				-- If it exists as a property
+				if typeof(key) == "string" and self[propertyPrefix .. key] ~= nil and self[propertyGetterPrefix .. key] then
+					return self[propertyGetterPrefix .. key](self, key)
+				end
+
+				-- If it exists and is not a property
+				if self[key] ~= nil then
+					return self[key]
+				end
+
+				-- If it exists in metatable
+				if instance[key] ~= nil then
+					return instance[key]
+				else -- Nothing to be found
+					return nil
+				end
+			end,
+			__newindex = function(self, key, value)
+				-- If it exists as a property
+				if typeof(key) == "string" and self[propertySetterPrefix .. key] ~= nil then
+					self[propertySetterPrefix .. key](self, key, value)
+					return
+				end
+
+				self[key] = value
+			end
+		})
 	end
 
 	return instance
