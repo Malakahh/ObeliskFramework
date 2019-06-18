@@ -4,7 +4,7 @@
 
 local _, ns = ...
 local libraryName = "ObeliskOptions"
-local major, minor = 0, 1
+local major, minor = 0, 2
 
 ---------------
 -- Libraries --
@@ -13,7 +13,7 @@ local major, minor = 0, 1
 local Options = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
 if not Options then return end
 
-local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 0)
+local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 1)
 if not FrameworkClass then
 	error(ns.Debug:sprint(libraryName, "Failed to load ObeliskFrameworkClass"))
 end
@@ -24,19 +24,22 @@ end
 
 Options.libraryName = libraryName
 
-setmetatable(Options, {
-	__call = function (self, ...)
-		return self:New(...)
-	end,
-	__index = Options
-})
+-- setmetatable(Options, {
+-- 	__call = function (self, ...)
+-- 		return self:New(...)
+-- 	end,
+-- 	__index = Options
+-- })
 
 ---------------
 -- Functions --
 ---------------
 
 function Options:New(name, parent, onRefresh, onOkay, onCancel, onDefault)
-	local instance = FrameworkClass(self, "FRAME")
+	local instance = FrameworkClass({
+		prototype = self,
+		frameType = "FRAME",
+	})	
 
 	instance.name = name
 	instance.parent = parent

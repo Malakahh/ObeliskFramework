@@ -5,7 +5,7 @@
 local _, ns = ...
 local libraryName = "ObeliskCollectionsStack"
 local major = 0
-local minor = 1
+local minor = 2
 
 ---------------
 -- Libraries --
@@ -19,11 +19,10 @@ Stack.libraryName = libraryName
 setmetatable(Stack, {
 	__call = function (self, ...)
 		return self:New(...)
-	end,
-	__index = Stack
+	end
 })
 
-local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 0)
+local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 1)
 if not FrameworkClass then
 	error(ns.Debug:sprint(libraryName, "Failed to load ObeliskFrameworkClass"))
 end
@@ -32,12 +31,22 @@ if ns.OBELISK_DEBUG then
 	ns.Debug:print(libraryName, "LOADED")
 end
 
+------------
+-- Locals --
+------------
+
+local shouldSetMetaTable = true
+
 ---------------
 -- Functions --
 ---------------
 
 function Stack:New()
-	local instance = FrameworkClass(self)
+	local instance = FrameworkClass({
+		prototype = self,
+		frameName = "Stack"
+	})
+	shouldSetMetaTable = false
 
 	instance.items = {}
 

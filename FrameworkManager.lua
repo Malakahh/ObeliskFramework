@@ -1,7 +1,7 @@
 local addonName, ns = ...
 
 local managerName = "ObeliskFrameworkManager"
-local managerVersion = 1
+local managerVersion = 2
 local Manager = _G[managerName]
 
 if ns.OBELISK_DEBUG then
@@ -42,6 +42,7 @@ if not Manager or Manager.version < managerVersion then
 		if not self.libs[library] or not self.libs[library][major] then
 			error("Cannot find a library instance of " .. library .. " version: " .. major)
 		end
+
 		return self.libs[library][major]
 	end
 

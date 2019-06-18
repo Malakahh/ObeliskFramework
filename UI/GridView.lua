@@ -2,11 +2,10 @@
 -- Meta --
 ----------
 
-
 local _, ns = ...
 local libraryName = "ObeliskGridView"
 local major = 1
-local minor = 2
+local minor = 3
 
 ---------------
 -- Libraries --
@@ -15,7 +14,7 @@ local minor = 2
 local GridView = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
 if not GridView then return end
 
-local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 0)
+local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 1)
 if not FrameworkClass then
 	error(ns.Debug:sprint(libraryName, "Failed to load ObeliskFrameworkClass"))
 end
@@ -29,8 +28,7 @@ GridView.libraryName = libraryName
 setmetatable(GridView, {
 	__call = function (self, ...)
 		return self:New(...)
-	end,
-	__index = GridView
+	end
 })
 
 ---------------
@@ -38,7 +36,12 @@ setmetatable(GridView, {
 ---------------
 
 function GridView:New(width, height, name, parent)
-	local instance = FrameworkClass(self, "FRAME", name, parent)
+	local instance = FrameworkClass({
+		prototype = self,
+		frameType = "FRAME",
+		frameName = name,
+		parent = UIParent,
+	})	
 
 	instance:SetSize(width, height)
 	instance.items = {}
