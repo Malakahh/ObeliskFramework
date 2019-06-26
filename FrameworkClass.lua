@@ -4,7 +4,7 @@
 
 local _, ns = ...
 local libraryName = "ObeliskFrameworkClass"
-local major, minor = 1, 0
+local major, minor = 1, 1
 
 ---------------
 -- Libraries --
@@ -29,8 +29,8 @@ setmetatable(FrameworkClass, {
 ---------------
 
 local propertyPrefix = "__"
-ns.OBELISK_PROPERTY_GET_PREFIX = propertyPrefix .. "get"
-ns.OBELISK_PROPERTY_SET_PREFIX = propertyPrefix .. "set"
+FrameworkClass.PROPERTY_GET_PREFIX = propertyPrefix .. "get"
+FrameworkClass.PROPERTY_SET_PREFIX = propertyPrefix .. "set"
 
 ---------------
 -- Functions --
@@ -69,8 +69,8 @@ function FrameworkClass:New(config)
 		setmetatable(instance, {
 			__index = function(self, key)
 				-- If it exists as a property
-				if type(key) == "string" and rawget(self, propertyPrefix .. key) ~= nil and rawget(self, ns.OBELISK_PROPERTY_GET_PREFIX .. key) then
-					return rawget(self, ns.OBELISK_PROPERTY_GET_PREFIX .. key)(self, propertyPrefix .. key)
+				if type(key) == "string" and rawget(self, propertyPrefix .. key) ~= nil and rawget(self, FrameworkClass.PROPERTY_GET_PREFIX .. key) then
+					return rawget(self, FrameworkClass.PROPERTY_GET_PREFIX .. key)(self, propertyPrefix .. key)
 				end
 
 				-- If it exists and is not a property
@@ -87,19 +87,15 @@ function FrameworkClass:New(config)
 			end,
 			__newindex = function(self, key, value)
 				-- If it exists as a property
-				if type(key) == "string" and rawget(self, ns.OBELISK_PROPERTY_SET_PREFIX .. key) ~= nil then
-					rawset(self, propertyPrefix .. key, rawget(self, ns.OBELISK_PROPERTY_SET_PREFIX .. key)(self, propertyPrefix .. key, value))
-					--self[propertyPrefix .. key] = self[ns.OBELISK_PROPERTY_SET_PREFIX .. key](self, propertyPrefix .. key, value)
+				if type(key) == "string" and rawget(self, FrameworkClass.PROPERTY_SET_PREFIX .. key) ~= nil then
+					local setter = rawget(self, FrameworkClass.PROPERTY_SET_PREFIX .. key)
+					rawset(self, propertyPrefix .. key, setter(self, propertyPrefix .. key, value))
 					return
 				end
 
-				--self[key] = value
 				rawset(self, key, value)
 			end
-		})
-
-
-		
+		})		
 	end
 
 	return instance

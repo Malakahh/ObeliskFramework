@@ -1,3 +1,9 @@
+----------
+-- TODO --
+----------
+
+-- Use MergeFunc for AppendScript
+
 local _, ns = ...
 
 ns.Util = ns.Util or {}
@@ -34,7 +40,7 @@ function ns.Util.MergeFunc(f1, f2)
 end
 
 function ns.Util.Dump(value, depth)
-	if type(value) == "nil" then return "" end
+	if type(value) == "nil" then return "|cFFFF00FF" .. nil .. "|r" end
 
 	depth = depth or 0
 
@@ -73,13 +79,14 @@ end
 --- Table ---
 -------------
 
-function ns.Util.Table.Copy(source, dest)
+function ns.Util.Table.Copy(source, dest, force)
 	if not source then return end
 
+	force = force or false
 	dest = dest or {}
 
     for k,v in pairs(source) do
-    	if dest[k] == nil then
+    	if dest[k] == nil or force then
     		if type(v) == "table" then
     			dest[k] = ns.Util.Table.Copy(v)
     		else
