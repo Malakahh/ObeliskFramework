@@ -8,8 +8,12 @@ function ns.Debug:tostring(msg)
 		return tostring(msg)
 	elseif t == "bool" then
 		return tostring(msg)
+	elseif t == "number" then
+		return tostring(msg)
 	elseif t == "string" then
 		return msg
+	elseif t == "table" then
+		return type(msg)
 	else
 		error("Type of 'msg': " .. type(msg) .. " not currently supported")
 	end

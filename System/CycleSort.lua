@@ -19,11 +19,9 @@ if not CycleSort then return end
 
 local frame = CreateFrame("FRAME")
 function frame:OnUpdate(elapsed)
-	local status = coroutine.status(CycleSort.coroutine)
-	if status == "dead" then
+	local alive = coroutine.resume(CycleSort.coroutine)
+	if not alive then
 		self:SetScript("OnUpdate", nil)
-	else
-		coroutine.resume(CycleSort.coroutine)
 	end
 end
 
@@ -54,11 +52,28 @@ function CycleSort.Sort(array, funcTable)
 	frame:SetScript("OnUpdate", frame.OnUpdate)
 end
 
+-- Selection sort, for verification purposes
+-- function CycleSort.Process()
+-- 	for i = 1, #CycleSort.array - 1 do
+-- 		local jMin = i
+-- 		for j = i + 1, #CycleSort.array do
+-- 			if CycleSort.funcTable.Compare(CycleSort.array, j, jMin) == -1 then
+-- 				jMin = j
+-- 			end
+-- 		end
+
+-- 		if jMin ~= i then
+-- 			CycleSort.funcTable.Swap(CycleSort.array, i, jMin)
+-- 			coroutine.yield()
+-- 		end
+-- 	end
+-- end
+
 -- Intended to be called internally
 function CycleSort.Process()
-	for cycleStart = 1, #CycleSort.array - 1 do
+	for cycleStart = 1, #CycleSort.array do
 		local itemIdx = cycleStart
-		local item = CycleSort.array[itemIdx]
+		
 		-- Find where to put the item
 		local pos = cycleStart
 		for i = cycleStart + 1, #CycleSort.array do
@@ -71,16 +86,19 @@ function CycleSort.Process()
 		if pos ~= cycleStart then
 
 			-- Skip any potential duplicates
-			while item == CycleSort.array[pos] do
-				pos = pos + 1
+			if itemIdx ~= pos then
+				while CycleSort.funcTable.Compare(CycleSort.array, itemIdx, pos) == 0 do
+				 	pos = pos + 1
+				end
 			end
 
 			-- Swap
 			CycleSort.funcTable.Swap(CycleSort.array, itemIdx, pos)
-			item = CycleSort.array[pos]
+			coroutine.yield()		
 
 			-- Rotate the rest of the cycle
 			while pos ~= cycleStart do
+				--print("Pos: " .. pos .. " cycleStart: " .. cycleStart)
 
 				-- Find where to put the item
 				pos = cycleStart
@@ -91,13 +109,14 @@ function CycleSort.Process()
 				end
 
 				-- Put the item there, or right after any duplicates
-				while item == CycleSort.array[pos] do
-					pos = pos + 1
+				if itemIdx ~= pos then
+					while CycleSort.funcTable.Compare(CycleSort.array, itemIdx, pos) == 0 do
+						print ("Incrementing: itemIdx: " .. itemIdx .. " pos: " .. pos)
+						pos = pos + 1
+					end
 				end
-				
+					
 				CycleSort.funcTable.Swap(CycleSort.array, itemIdx, pos)
-				item = CycleSort.array[pos]
-				
 				coroutine.yield()
 			end
 		end
@@ -107,7 +126,7 @@ function CycleSort.Process()
 	-- do
 	-- 	local s = ""
 	-- 	for k,v in pairs(CycleSort.array) do
-	-- 		s = s .. " " .. k .. ":".. v
+	-- 		s = s .. " " .. k .. ":".. v.virt
 	-- 	end
 	-- 	print(s)
 	-- end

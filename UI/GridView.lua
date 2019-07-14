@@ -40,7 +40,7 @@ function GridView:New(width, height, name, parent)
 		prototype = self,
 		frameType = "FRAME",
 		frameName = name,
-		parent = UIParent,
+		parent = parent or UIParent,
 	})	
 
 	instance:SetSize(width, height)
