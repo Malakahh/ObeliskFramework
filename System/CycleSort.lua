@@ -98,8 +98,7 @@ function CycleSort.Process()
 
 			-- Rotate the rest of the cycle
 			while pos ~= cycleStart do
-				--print("Pos: " .. pos .. " cycleStart: " .. cycleStart)
-
+				
 				-- Find where to put the item
 				pos = cycleStart
 				for k = cycleStart + 1, #CycleSort.array do
@@ -111,7 +110,6 @@ function CycleSort.Process()
 				-- Put the item there, or right after any duplicates
 				if itemIdx ~= pos then
 					while CycleSort.funcTable.Compare(CycleSort.array, itemIdx, pos) == 0 do
-						print ("Incrementing: itemIdx: " .. itemIdx .. " pos: " .. pos)
 						pos = pos + 1
 					end
 				end

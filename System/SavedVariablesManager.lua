@@ -11,7 +11,7 @@
 
 local _, ns = ...
 local libraryName = "ObeliskSavedVariablesManager"
-local major, minor = 0, 1
+local major, minor = 0, 2
 
 ---------------
 -- Libraries --
@@ -38,15 +38,21 @@ SavedVariablesManager.libraryName = libraryName
 ------------
 
 local singleton = nil
+local characterName
+local realmName
 
 local function FlipTables(source, dest, tableKey)
 	if tableKey then
-		if source[tableKey] == nil then
+		if source[realmName] == nil then
+			return
+		elseif source[realmName][characterName] == nil then
+			return
+		elseif source[realmName][characterName][tableKey] == nil then
 			return
 		end
 
-		table.wipe(dest[tableKey])
-		ns.Util.Table.Copy(source[tableKey], dest[tableKey], true)
+		table.wipe(dest[realmName][characterName][tableKey])
+		ns.Util.Table.Copy(source[realmName][characterName][tableKey], dest[realmName][characterName][tableKey], true)
 	else
 		table.wipe(dest)
 		ns.Util.Table.Copy(source, dest, true)
@@ -66,6 +72,8 @@ function SavedVariablesManager.Init(SavedVariables)
 		inheritsFrame = nil
 	})
 
+	characterName, realmName = UnitFullName("player")
+
 	singleton.__SavedVariables = SavedVariables
 	singleton.__WorkingTable = {}
 	singleton.__Default = {}
@@ -74,17 +82,24 @@ function SavedVariablesManager.Init(SavedVariables)
 end
 
 function SavedVariablesManager.CreateRegisteredTable(tableKey)
-	if singleton.__WorkingTable[tableKey] then
-		return singleton.__WorkingTable[tableKey]
+	if singleton.__WorkingTable[realmName] then
+		if singleton.__WorkingTable[realmName][characterName] then
+			if singleton.__WorkingTable[realmName][characterName][tableKey] then
+				return singleton.__WorkingTable[realmName][characterName][tableKey]
+			end
+		end
 	end
 
-	singleton.__WorkingTable[tableKey] = {}
+	singleton.__WorkingTable[realmName] = {}
+	singleton.__WorkingTable[realmName][characterName] = {}
+	singleton.__WorkingTable[realmName][characterName][tableKey] = {}
+
 	SavedVariablesManager.Reset(tableKey)
-	return singleton.__WorkingTable[tableKey]
+	return singleton.__WorkingTable[realmName][characterName][tableKey]
 end
 
 function SavedVariablesManager.GetRegisteredTable(tableKey)
-	return singleton.__WorkingTable[tableKey]
+	return singleton.__WorkingTable[realmName][characterName][tableKey]
 end
 
 function SavedVariablesManager.Reset(tableKey)
