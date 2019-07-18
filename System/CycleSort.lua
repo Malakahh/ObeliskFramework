@@ -18,12 +18,21 @@ if not CycleSort then return end
 ------------
 
 local frame = CreateFrame("FRAME")
+--frame:RegisterEvent("ITEM_LOCK_CHANGED")
 function frame:OnUpdate(elapsed)
 	local alive = coroutine.resume(CycleSort.coroutine)
 	if not alive then
 		self:SetScript("OnUpdate", nil)
 	end
 end
+
+local btnTest = CreateFrame("BUTTON", "Test", self, "UIPanelButtonTemplate")
+btnTest:SetSize(150, 50)
+btnTest:SetText("Test")
+btnTest:SetPoint("TOP", UIPARENT, "TOP", 0, -50)
+btnTest:SetScript("OnClick", function( ... )
+	coroutine.resume(CycleSort.coroutine)
+end)
 
 ---------------
 -- Functions --
@@ -52,80 +61,87 @@ function CycleSort.Sort(array, funcTable)
 	frame:SetScript("OnUpdate", frame.OnUpdate)
 end
 
--- Selection sort, for verification purposes
+-- Dumbfuck sort
 -- function CycleSort.Process()
--- 	for i = 1, #CycleSort.array - 1 do
--- 		local jMin = i
--- 		for j = i + 1, #CycleSort.array do
--- 			if CycleSort.funcTable.Compare(CycleSort.array, j, jMin) == -1 then
--- 				jMin = j
--- 			end
--- 		end
-
--- 		if jMin ~= i then
--- 			CycleSort.funcTable.Swap(CycleSort.array, i, jMin)
--- 			coroutine.yield()
--- 		end
+-- 	for i = 1, #CycleSort.array do
+-- 		if 
 -- 	end
 -- end
 
--- Intended to be called internally
+-- Selection sort, for verification purposes
 function CycleSort.Process()
-	for cycleStart = 1, #CycleSort.array do
-		local itemIdx = cycleStart
-		
-		-- Find where to put the item
-		local pos = cycleStart
-		for i = cycleStart + 1, #CycleSort.array do
-			if CycleSort.funcTable.Compare(CycleSort.array, i, itemIdx) == -1 then -- array[i] < item
-				pos = pos + 1
+	for i = 1, #CycleSort.array - 1 do
+		local jMin = i
+		for j = i + 1, #CycleSort.array do
+			if CycleSort.funcTable.Compare(CycleSort.array, j, jMin) == -1 then
+				jMin = j
 			end
 		end
 
-		-- If the item isn't in its correct place, put the item there or right after any duplicates
-		if pos ~= cycleStart then
-
-			-- Skip any potential duplicates
-			if itemIdx ~= pos then
-				while CycleSort.funcTable.Compare(CycleSort.array, itemIdx, pos) == 0 do
-				 	pos = pos + 1
-				end
-			end
-
-			-- Swap
-			CycleSort.funcTable.Swap(CycleSort.array, itemIdx, pos)
-			coroutine.yield()		
-
-			-- Rotate the rest of the cycle
-			while pos ~= cycleStart do
-				
-				-- Find where to put the item
-				pos = cycleStart
-				for k = cycleStart + 1, #CycleSort.array do
-					if CycleSort.funcTable.Compare(CycleSort.array, k, itemIdx) == -1 then -- array[i] < item
-						pos = pos + 1
-					end
-				end
-
-				-- Put the item there, or right after any duplicates
-				if itemIdx ~= pos then
-					while CycleSort.funcTable.Compare(CycleSort.array, itemIdx, pos) == 0 do
-						pos = pos + 1
-					end
-				end
-					
-				CycleSort.funcTable.Swap(CycleSort.array, itemIdx, pos)
-				coroutine.yield()
-			end
+		if jMin ~= i then
+			CycleSort.funcTable.Swap(CycleSort.array, i, jMin)
+			coroutine.yield()
 		end
 	end
-
-	-- print("Finish")
-	-- do
-	-- 	local s = ""
-	-- 	for k,v in pairs(CycleSort.array) do
-	-- 		s = s .. " " .. k .. ":".. v.virt
-	-- 	end
-	-- 	print(s)
-	-- end
 end
+
+-- Intended to be called internally
+-- function CycleSort.Process()
+-- 	for cycleStart = 1, #CycleSort.array - 1 do
+-- 		local itemIdx = cycleStart
+		
+-- 		-- Find where to put the item
+-- 		local pos = cycleStart
+-- 		for i = cycleStart + 1, #CycleSort.array do
+-- 			if CycleSort.funcTable.Compare(CycleSort.array, i, itemIdx) == -1 then -- array[i] < item
+-- 				pos = pos + 1
+-- 			end
+-- 		end
+
+-- 		-- If the item isn't in its correct place, put the item there or right after any duplicates
+-- 		if pos ~= cycleStart then
+
+-- 			-- Skip any potential duplicates
+-- 			-- if itemIdx ~= pos then
+-- 			-- 	while CycleSort.funcTable.Compare(CycleSort.array, itemIdx, pos) == 0 do
+-- 			-- 	 	pos = pos + 1
+-- 			-- 	end
+-- 			-- end
+
+-- 			-- Swap
+-- 			CycleSort.funcTable.Swap(CycleSort.array, itemIdx, pos)
+-- 			--coroutine.yield()		
+
+-- 			-- Rotate the rest of the cycle
+-- 			while pos ~= cycleStart do
+				
+-- 				-- Find where to put the item
+-- 				pos = cycleStart
+-- 				for k = cycleStart + 1, #CycleSort.array do
+-- 					if CycleSort.funcTable.Compare(CycleSort.array, k, itemIdx) == -1 then -- array[i] < item
+-- 						pos = pos + 1
+-- 					end
+-- 				end
+
+-- 				-- Put the item there, or right after any duplicates
+-- 				-- if itemIdx ~= pos then
+-- 				-- 	while CycleSort.funcTable.Compare(CycleSort.array, itemIdx, pos) == 0 do
+-- 				-- 		pos = pos + 1
+-- 				-- 	end
+-- 				-- end
+					
+-- 				CycleSort.funcTable.Swap(CycleSort.array, itemIdx, pos)
+-- 				--coroutine.yield()
+-- 			end
+-- 		end
+-- 	end
+
+-- 	print("Finish")
+-- 	do
+-- 		local s = ""
+-- 		for k,v in pairs(CycleSort.array) do
+-- 			s = s .. " " .. k .. ":".. v.virt .. ":" .. v.phys
+-- 		end
+-- 		print(s)
+-- 	end
+-- end
