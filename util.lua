@@ -133,3 +133,15 @@ function ns.Util.Table.Arrange(t)
 
 	return ret
 end
+
+function ns.Util.Table.SelectGiven(t, funcCondition, ...)
+	local count = 0
+	local ret = {}
+	for k,v in pairs(t) do
+		if funcCondition(k, v, ...) then
+			ret[k] = v
+			count = count + 1
+		end
+	end
+	return ret, count
+end

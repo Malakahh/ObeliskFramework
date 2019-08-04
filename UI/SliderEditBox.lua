@@ -5,7 +5,7 @@
 local _, ns = ...
 local libraryName = "ObeliskSliderEditBox"
 local major = 0
-local minor = 1
+local minor = 2
 
 ---------------
 -- Libraries --
@@ -53,18 +53,20 @@ function SliderEditBox:New(frameName, parent, text, OnValueChangedCallback)
 	instance.Slider:SetObeyStepOnDrag(true)
 	instance.Slider:SetValueStep(1)
 	instance.Slider:SetScript("OnValueChanged", instance.Slider_OnValueChanged)
+	instance.Slider:SetValue(1)
+	instance.Slider.Text = _G[instance.Slider:GetName() .. "Text"]
+	instance.Slider.LowText = _G[instance.Slider:GetName() .. "Low"]
+	instance.Slider.HighText = _G[instance.Slider:GetName() .. "High"]
 
 	instance.EditBox = CreateFrame("EditBox", nil, instance, "InputBoxTemplate")
 	instance.EditBox:SetNumeric(true)
 	instance.EditBox:SetAutoFocus(false)
 	instance.EditBox:SetSize(30, 20)
-	instance.EditBox:SetPoint("TOP", instance.Slider, "BOTTOM", 0, 0)
+	instance.EditBox:SetPoint("TOP", instance.Slider, "BOTTOM", 0, -5)
 	instance.EditBox:SetScript("OnEnterPressed", SliderEditBox.EditBox_OnEnterPressed)
 	instance.EditBox:SetScript("OnEditFocusLost", SliderEditBox.EditBox_OnEditFocusLost)
 
-	instance.Slider:SetValue(1)
-
-	_G[instance.Slider:GetName() .. "Text"]:SetText(text)
+	instance.Slider.Text:SetText(text)
 
 	return instance
 end
@@ -74,8 +76,8 @@ function SliderEditBox:SetMinMaxValues(min, max)
 	self.Max = tonumber(max)
 
 	self.Slider:SetMinMaxValues(self.Min, self.Max)
-	_G[self.Slider:GetName() .. "Low"]:SetText(self.Min)
-	_G[self.Slider:GetName() .. "High"]:SetText(self.Max)
+	self.Slider.LowText:SetText(self.Min)
+	self.Slider.HighText:SetText(self.Max)
 end
 
 function SliderEditBox:SetValue(value)
@@ -84,6 +86,23 @@ end
 
 function SliderEditBox:GetValue()
 	return tonumber(self.EditBox:GetText())
+end
+
+function SliderEditBox:SetEnable(bool)
+	self.Slider:SetEnabled(bool)
+	self.EditBox:SetEnabled(bool)
+
+	if bool then
+		self.Slider.Text:SetTextColor(1,1,1,1)
+		self.Slider.LowText:SetTextColor(1,1,1,1)
+		self.Slider.HighText:SetTextColor(1,1,1,1)
+		self.EditBox:SetTextColor(1,1,1,1)
+	else
+		self.Slider.Text:SetTextColor(0.3,0.3,0.3,1)
+		self.Slider.LowText:SetTextColor(0.3,0.3,0.3,1)
+		self.Slider.HighText:SetTextColor(0.3,0.3,0.3,1)
+		self.EditBox:SetTextColor(0.3,0.3,0.3,1)
+	end
 end
 
 function SliderEditBox.Slider_OnValueChanged(self, value)
@@ -98,6 +117,8 @@ end
 function SliderEditBox.EditBox_OnEnterPressed(self)
 	local parent = self:GetParent()
 	local val = tonumber(self:GetText())
+
+	if val == nil then return end
 
 	if val < parent.Min then
 		val = parent.Min

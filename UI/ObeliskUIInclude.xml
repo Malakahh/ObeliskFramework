@@ -4,5 +4,6 @@ xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 
 <Script file="GridView.lua"/>
 <Script file="SliderEditBox.lua"/>
+<Script file="CollapsePanel.lua"/>
 
 </Ui>
