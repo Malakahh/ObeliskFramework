@@ -139,7 +139,8 @@ function ns.Util.Table.SelectGiven(t, funcCondition, ...)
 	local ret = {}
 	for k,v in pairs(t) do
 		if funcCondition(k, v, ...) then
-			ret[k] = v
+			table.insert(ret, {key=k,value=v})
+			--ret[k] = v
 			count = count + 1
 		end
 	end
