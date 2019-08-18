@@ -47,7 +47,7 @@ function CollapsePanel:New(frameName, parent, width, height)
 	instance.Width = width
 	instance.Height = height
 
-	self:Open()
+	instance:Open()
 
 	return instance
 end
@@ -58,6 +58,7 @@ end
 
 CollapsePanel[FrameworkClass.PROPERTY_SET_PREFIX .. "Width"] = function(self, key, value)
 	self._width = value
+	return value
 end
 
 CollapsePanel[FrameworkClass.PROPERTY_GET_PREFIX .. "Height"] = function(self, key)
@@ -66,6 +67,7 @@ end
 
 CollapsePanel[FrameworkClass.PROPERTY_SET_PREFIX .. "Height"] = function(self, key, value)
 	self._height = value
+	return value
 end
 
 function CollapsePanel:Open()
@@ -75,7 +77,7 @@ function CollapsePanel:Open()
 end
 
 function CollapsePanel:Close()
-	self:SetSize(0, 0)
+	self:SetSize(1, 1) -- unable to set to 0,0 for some reason, but would be preferable
 	self:Hide()
 	self.IsCollapsed = true
 end

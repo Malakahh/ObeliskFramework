@@ -1,3 +1,5 @@
+-- NOT CURRENTLY FUNCTIONAL
+
 ----------
 -- Meta --
 ----------
@@ -26,14 +28,6 @@ function frame:OnUpdate(elapsed)
 	end
 end
 
-local btnTest = CreateFrame("BUTTON", "Test", self, "UIPanelButtonTemplate")
-btnTest:SetSize(150, 50)
-btnTest:SetText("Test")
-btnTest:SetPoint("TOP", UIPARENT, "TOP", 0, -50)
-btnTest:SetScript("OnClick", function( ... )
-	coroutine.resume(CycleSort.coroutine)
-end)
-
 ---------------
 -- Functions --
 ---------------
@@ -60,13 +54,6 @@ function CycleSort.Sort(array, funcTable)
 	CycleSort.funcTable = funcTable
 	frame:SetScript("OnUpdate", frame.OnUpdate)
 end
-
--- Dumbfuck sort
--- function CycleSort.Process()
--- 	for i = 1, #CycleSort.array do
--- 		if 
--- 	end
--- end
 
 -- Selection sort, for verification purposes
 function CycleSort.Process()
