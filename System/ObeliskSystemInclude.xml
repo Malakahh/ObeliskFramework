@@ -2,6 +2,7 @@
 xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 
+<Script file="VersionUnification.lua"/>
 <Script file="Options.lua"/>
 <Script file="CustomEvents.lua"/>
 <Script file="CycleSort.lua"/>
