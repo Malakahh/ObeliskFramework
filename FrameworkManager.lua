@@ -27,15 +27,14 @@ if not Manager or Manager.version < managerVersion then
 
 		local libMajor = self.libs[library][major]
 		
-		if libMajor and libMajor.version.minor >= minor then return nil end
-
+		if libMajor and libMajor.version.minor >= minor then return nil, libMajor.version end
 		self.libs[library][major] = {}
 		self.libs[library][major].version = {
 			major = major,
 			minor = minor
 		}
-		return self.libs[library][major]
 
+		return self.libs[library][major]
 	end
 
 	function Manager:GetLibrary(library, major)
