@@ -5,7 +5,6 @@
 -- Use MergeFunc for AppendScript
 
 local _, ns = ...
-
 ns.Util = ns.Util or {}
 ns.Util.Table = ns.Util.Table or {}
 

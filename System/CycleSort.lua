@@ -12,8 +12,14 @@ local major, minor = 0, 1
 -- Libraries --
 ---------------
 
-local CycleSort = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
-if not CycleSort then return end
+local CycleSort, libVersion = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
+if not CycleSort then
+	if (libVersion and (libVersion.major ~= major or libVersion.minor ~= minor)) or libVersion == nil then
+		error(ns.Debug:sprint(libraryName, "Failed to create library"))
+	else
+		return
+	end
+end
 
 ------------
 -- Locals --

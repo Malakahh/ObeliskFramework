@@ -10,8 +10,14 @@ local major, minor = 0, 1
 -- Libraries --
 ---------------
 
-local CustomEvents = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
-if not CustomEvents then return end
+local CustomEvents, libVersion = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
+if not CustomEvents then
+	if (libVersion and (libVersion.major ~= major or libVersion.minor ~= minor)) or libVersion == nil then
+		error(ns.Debug:sprint(libraryName, "Failed to create library"))
+	else
+		return
+	end
+end
 
 function CustomEvents:Register(eventName, func)
 	if self.registeredEvents == nil then

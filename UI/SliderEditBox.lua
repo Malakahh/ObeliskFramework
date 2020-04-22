@@ -11,8 +11,14 @@ local minor = 2
 -- Libraries --
 ---------------
 
-local SliderEditBox = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
-if not SliderEditBox then return end
+local SliderEditBox, libVersion = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
+if not SliderEditBox then
+	if (libVersion and (libVersion.major ~= major or libVersion.minor ~= minor)) or libVersion == nil then
+		error(ns.Debug:sprint(libraryName, "Failed to create library"))
+	else
+		return
+	end
+end
 
 local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 1)
 if not FrameworkClass then
