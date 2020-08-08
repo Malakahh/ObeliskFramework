@@ -10,9 +10,13 @@ local major, minor = 0, 1
 -- Libraries --
 ---------------
 
-local VersionUnification = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
+local VersionUnification, libVersion = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
 if not VersionUnification then 
-	error(ns.Debug:sprint(libraryName, "Failed to create library"))
+	if (libVersion and (libVersion.major ~= major or libVersion.minor ~= minor)) or libVersion == nil then
+		error(ns.Debug:sprint(libraryName, "Failed to create library"))
+	else
+		return
+	end
 end
 
 local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 1)

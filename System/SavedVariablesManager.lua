@@ -17,9 +17,13 @@ local major, minor = 0, 2
 -- Libraries --
 ---------------
 
-local SavedVariablesManager = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
+local SavedVariablesManager, libVersion = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
 if not SavedVariablesManager then 
-	error(ns.Debug:sprint(libraryName, "Failed to create library"))
+	if (libVersion and (libVersion.major ~= major or libVersion.minor ~= minor)) or libVersion == nil then
+		error(ns.Debug:sprint(libraryName, "Failed to create library"))
+	else
+		return
+	end
 end
 
 local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 1)

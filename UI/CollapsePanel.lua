@@ -10,9 +10,13 @@ local major, minor = 0, 1
 -- Libraries --
 ---------------
 
-local CollapsePanel = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
-if not CollapsePanel then 
-	error(ns.Debug:sprint(libraryName, "Failed to create library"))
+local CollapsePanel, libVersion = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
+if not CollapsePanel then
+	if (libVersion and (libVersion.major ~= major or libVersion.minor ~= minor)) or libVersion == nil then
+		error(ns.Debug:sprint(libraryName, "Failed to create library"))
+	else
+		return
+	end
 end
 
 local FrameworkClass = ObeliskFrameworkManager:GetLibrary("ObeliskFrameworkClass", 1)

@@ -11,8 +11,14 @@ local minor = 2
 -- Libraries --
 ---------------
 
-local Stack = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
-if not Stack then return end
+local Stack, libVersion = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
+if not Stack then
+	if (libVersion and (libVersion.major ~= major or libVersion.minor ~= minor)) or libVersion == nil then
+		error(ns.Debug:sprint(libraryName, "Failed to create library"))
+	else
+		return
+	end
+end
 
 Stack.libraryName = libraryName
 

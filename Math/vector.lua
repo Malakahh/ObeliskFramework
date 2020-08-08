@@ -11,9 +11,15 @@ local minor = 1
 -- Libraries --
 ---------------
 
-local Vector = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
+local Vector, libVersion = ObeliskFrameworkManager:NewLibrary(libraryName, major, minor)
 
-if not Vector then return end
+if not Vector then 
+	if (libVersion and (libVersion.major ~= major or libVersion.minor ~= minor)) or libVersion == nil then
+		error(ns.Debug:sprint(libraryName, "Failed to create library"))
+	else
+		return
+	end
+end
 
 Vector.__index = Vector
 Vector.libraryName = libraryName

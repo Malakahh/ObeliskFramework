@@ -33,8 +33,8 @@ if not Manager or Manager.version < managerVersion then
 			major = major,
 			minor = minor
 		}
-		return self.libs[library][major]
 
+		return self.libs[library][major]
 	end
 
 	function Manager:GetLibrary(library, major)
