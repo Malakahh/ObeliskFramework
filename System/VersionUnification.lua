@@ -41,3 +41,4 @@ VersionUnification.libraryName = libraryName
 
 VersionUnification.IsRetail = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
 VersionUnification.IsClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
+VersionUnification.IsTBC = (WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC)
